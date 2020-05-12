@@ -1,0 +1,36 @@
+version: '3.4'
+
+services:
+  rabbit:
+    image: rabbitmq:3-management-alpine
+#    networks:
+#      - docker_gwbridge
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  sophia-uploader:
+    image: ${DOCKER_REGISTRY-}sophia-uploader
+    build:
+      context: .
+      dockerfile: Sophia.Uploader/Dockerfile
+#    networks:
+#      - docker_gwbridge
+    ports:
+      - "5127:80"
+      - "5128:443"
+
+  notaryProvider:
+    image: ${DOCKER_REGISTRY-}notaryProvider
+    build:
+      context: .
+      dockerfile: Providers/NotaryProvider/Dockerfile
+#    networks:
+#      - docker_gwbridge
+    ports:
+      - "5131:80"
+      - "5130:444"
+
+#networks:
+#  docker_gwbridge:
+#    driver: bridge

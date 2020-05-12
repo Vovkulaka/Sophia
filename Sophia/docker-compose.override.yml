@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  sophia-uploader:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URL=https://+:443;http://+:80
+      - ConnectionString=Data Source=172.31.14.37\TERRASOFT;Initial Catalog=BlackListData;User ID=j-Sophia;Password=B2F1C4B5-5C18-41A3-B16D-2BB9D30F6EAE;MultipleActiveResultSets=True;Max Pool Size=200
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
