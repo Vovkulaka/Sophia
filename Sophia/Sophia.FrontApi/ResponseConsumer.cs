@@ -12,18 +12,18 @@ namespace Sophia.FrontApi
 {
     public class ResponseConsumer : IConsumer<MessageResponseModel>
     {
-        static Logger LoggerStatic { get; } = LogManager.GetCurrentClassLogger();
-        IResponseComposeService responseComposeService;
+        Logger Logger { get; } = LogManager.GetCurrentClassLogger();
+        readonly IResponseComposeService _responseComposeService;
 
-        public ResponseConsumer (IResponseComposeService _responseComposeService)
+        public ResponseConsumer (IResponseComposeService responseComposeService)
         {
-            responseComposeService = _responseComposeService;
+            _responseComposeService = responseComposeService;
         }
         public ResponseConsumer () { }
 
         public async Task Consume(ConsumeContext<MessageResponseModel> context)
         {
-            LoggerStatic.AddLogStart($"RECEIVING ProviderName: {context.Message.ProviderName}");
+            Logger.AddLogStart($"RECEIVING ProviderName: {context.Message.ProviderName}");
 
             if (context.Message.ProviderName == "SophiaFrontApi")
             {
@@ -32,7 +32,7 @@ namespace Sophia.FrontApi
                     context.Message.IdRequest,
                     context.Message.Data);
 
-                await responseComposeService.AddOrUpdate(partyDocument);
+                await _responseComposeService.AddOrUpdate(partyDocument);
             }
         }
     }

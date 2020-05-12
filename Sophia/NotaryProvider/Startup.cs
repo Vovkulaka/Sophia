@@ -27,7 +27,7 @@ namespace NotaryProvider
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services) // заміни viod на ConfigureServices якщо використовуватимеш Autofac - https://habr.com/ru/post/437002/
         {
             services.AddControllers();
             services.AddSwaggerDocument(config =>
@@ -54,21 +54,29 @@ namespace NotaryProvider
             //services.AddHostedService<FileBuilderHostedServiceDI<MassTransitConsumerHostedService>>();
             services.AddHostedService<FileBuilderHostedService>();
 
-            //services.AddTransient<GetDataService>();
-            //services.AddSingleton<GetDataService>(new ReturnResponseService());
             services.AddTransient<SavingToDBService>();
-            services.AddTransient<IReturnResponseService, ReturnResponseService>(factory => factory.GetService<ReturnResponseService>());
+
             services.AddTransient<ReturnResponseService>();
-            services.AddSingleton<IFileComposeService>(new FileComposeService());
+            services.AddTransient<IReturnResponseService, ReturnResponseService>(factory => factory.GetService<ReturnResponseService>());
+
             services.AddSingleton<FileComposeService>();
+            services.AddSingleton<IFileComposeService>(new FileComposeService());
+
+            services.AddTransient<GetDataService>();
+            //services.AddSingleton<IGetDataService>(new GetDataService());
+            //services.AddSingleton<GetDataService>(new ReturnResponseService());
             //services.AddSingleton(new GetDataService(new ReturnResponseService()));
-            services.AddSingleton<IGetDataService>(new GetDataService());
-            services.AddSingleton<GetDataService>();
-            services.AddTransient<GetDataService>((dsvc) =>
+            services.AddTransient<IGetDataService>((dsvc) =>
             {
                 IReturnResponseService svc = dsvc.GetService<IReturnResponseService>();
                 return new GetDataService(svc);
             });
+
+            //services.AddTransient<FilePartConsumer>((dsvc) =>
+            //{
+            //    IFileComposeService svc = dsvc.GetService<IFileComposeService>();
+            //    return new FilePartConsumer(svc);
+            //});
         }
 
         private void SetNlogConfig()

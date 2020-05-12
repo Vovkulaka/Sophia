@@ -18,7 +18,7 @@ namespace NotaryProvider.Services
     public class FileComposeService : IFileComposeService
     {
         private Logger Logger { get; } = LogManager.GetCurrentClassLogger();
-        private static Logger LoggerS { get; } = LogManager.GetCurrentClassLogger();
+
         /// <summary>
         /// https://habr.com/ru/company/skbkontur/blog/348508/
         /// </summary>
@@ -115,12 +115,12 @@ namespace NotaryProvider.Services
                 bool deleted = CollectoinFile.TryRemove(IdFile, out models);
                 if (deleted)
                 {
-                    LoggerS.AddLogStart("ConcurrentDictionary<string, ConcurrentBag<MessageModel>> - CLEANED");
+                    Logger.AddLogStart("ConcurrentDictionary<string, ConcurrentBag<MessageModel>> - CLEANED");
                 }
             }
             catch (Exception ex)
             {
-                LoggerS.AddLogException(ex);
+                Logger.AddLogException(ex);
             }
         }
     }

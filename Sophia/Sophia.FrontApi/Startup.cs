@@ -60,16 +60,14 @@ namespace Sophia.FrontApi
         {
             IBusControl busControl = Bus.Factory.CreateUsingRabbitMq(config =>
             {
-                var host = config.Host(ConfigConnection.HostAddress, cfg =>
+                var host = config.Host(ConfigRabbit.HostAddress, cfg =>
                 {
-                    cfg.Password(ConfigConnection.Password);
-                    cfg.Username(ConfigConnection.Username);
+                    cfg.Password(ConfigRabbit.Password);
+                    cfg.Username(ConfigRabbit.Username);
                 });
-#if DEBUG
-                //config.OverrideDefaultBusEndpointQueueName("SophiaFrontApi");
-                config.OverrideDefaultBusEndpointQueueName(ConfigRabbit.RabbitMqQueueName);
-#else
-#endif
+
+                config.OverrideDefaultBusEndpointQueueName(ConfigRabbit.RabbitMqQueueName); // SophiaFrontApi
+
                 config.UseMessageRetry(msgConfig =>
                 {
                     msgConfig.Interval(100, 1000 * 60);

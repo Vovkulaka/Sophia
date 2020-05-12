@@ -6,17 +6,17 @@ using NLog;
 using NotaryProvider.Services;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace NotaryProvider
 {
     public class FilePartConsumer : IConsumer<MessageFileModel>
     {
         Logger Logger { get; } = LogManager.GetCurrentClassLogger();
-        static Logger LoggerStatic { get; } = LogManager.GetCurrentClassLogger();
         static string currentDirectory = AppSettings.VolumePath;
         IFileComposeService _fileComposeService;
 
-        public FilePartConsumer(IFileComposeService fileComposeService)
+        public FilePartConsumer(IFileComposeService fileComposeService) // [FromServices] FileComposeService fileComposeService 
         {
             _fileComposeService = fileComposeService;
             FolderExist(currentDirectory);
@@ -37,14 +37,14 @@ namespace NotaryProvider
                 context.Message.LengthPart,
                 context.Message.LengthLastPart);
 
-            LoggerStatic.AddLogStart($"RECEIVING Id_part: {context.Message.IdPart} of {context.Message.Quantity} parts from model: {context.Message.IdFile}");
+            Logger.AddLogStart($"RECEIVING Id_part: {context.Message.IdPart} of {context.Message.Quantity} parts from model: {context.Message.IdFile}");
 
-            //_fileComposeService.AddOrUpdate(partyDocument);
+            //await _fileComposeService.AddOrUpdate(partyDocument);
             await new FileComposeService().AddOrUpdate(partyDocument);
         }
 
 
-        static void FolderExist(string currentDirectory)
+        void FolderExist(string currentDirectory)
         {
             if (!Directory.Exists(currentDirectory))
             {
@@ -57,7 +57,7 @@ namespace NotaryProvider
                 }
             }
 
-            LoggerStatic.AddLogStart(Directory.Exists(currentDirectory) ? "Folder exists." : "! ! !   --> There is no folder and it is not created <--   ! ! !");
+            Logger.AddLogStart(Directory.Exists(currentDirectory) ? "Folder exists." : "! ! !   --> There is no folder and it is not created <--   ! ! !");
         }
     }
 }

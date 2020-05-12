@@ -10,6 +10,7 @@ namespace Configuration
 
         public static string Username => Environment.GetEnvironmentVariable("RabbitMqUsername");
         public static string Password => Environment.GetEnvironmentVariable("RabbitMqPassword");
+        public static string RabbitMqQueueName => Environment.GetEnvironmentVariable("RabbitMqQueueName");
         private static string Host => Environment.GetEnvironmentVariable("RabbitMqHost");
         private static string Vhost => Environment.GetEnvironmentVariable("RabbitMqVhost");
         private static string Port
@@ -24,7 +25,6 @@ namespace Configuration
                 return port;
             }
         }
-        public static string RabbitMqQueueName => Environment.GetEnvironmentVariable("RabbitMqQueueName");
         //public static string HostAddress => $"rabbitmq://{Host}{Port}/{Vhost}";
         public static string HostAddress => Environment.GetEnvironmentVariable("RabbitMqHost"); //localhost;
 #else
