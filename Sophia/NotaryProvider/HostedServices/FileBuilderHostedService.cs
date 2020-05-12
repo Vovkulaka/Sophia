@@ -17,7 +17,7 @@ namespace NotaryProvider.HostedServices
     public class FileBuilderHostedService : IHostedService//<T> : IHostedService where T : IHostedService
     {
         private static Logger Logger { get; } = LogManager.GetCurrentClassLogger();
-        private FileComposeService _fileComposeService { get; }
+        private FileComposeService FileComposeService { get; }
         private SavingToDBService SavingToDBService { get; }
         //readonly T backgroundService;
         static string currentDirectory = AppSettings.VolumePath;
@@ -26,7 +26,7 @@ namespace NotaryProvider.HostedServices
         public FileBuilderHostedService(FileComposeService fileComposeService, SavingToDBService savingToDB) // (T _backgroundService, 
         {
             //backgroundService = _backgroundService;
-            _fileComposeService = fileComposeService;
+            FileComposeService = fileComposeService;
             SavingToDBService = savingToDB;
         }
 
@@ -36,7 +36,7 @@ namespace NotaryProvider.HostedServices
 
             while (true)
             {
-                var concurrentBagModel = service._fileComposeService.Read();
+                var concurrentBagModel = service.FileComposeService.Read();
                 foreach (IEnumerable<MessageFileModel> parts in concurrentBagModel)
                 {
                     // Здесь ты получишь по очерёдно все части всех файлов, что запишет тебе consumer.
@@ -54,7 +54,7 @@ namespace NotaryProvider.HostedServices
                     if (parts.FirstOrDefault().IdFile == checksumFile)
                     {
                         Logger.AddLogStart("SAVED FILE MATCHES SOURCE FILE!!!");
-                        service._fileComposeService.DeleteCBModel(parts.FirstOrDefault().IdFile);
+                        service.FileComposeService.DeleteCBModel(parts.FirstOrDefault().IdFile);
                     }
                     else
                     {

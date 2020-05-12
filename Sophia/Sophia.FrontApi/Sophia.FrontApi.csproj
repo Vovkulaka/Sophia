@@ -28,7 +28,6 @@
     <ProjectReference Include="..\Configuration\Configuration.csproj" />
     <ProjectReference Include="..\DataProvider\DataProvider.csproj" />
     <ProjectReference Include="..\MessageModelLib\MessageModelLib.csproj" />
-    <ProjectReference Include="..\NotaryProvider\NotaryProvider.csproj" />
   </ItemGroup>
 
 

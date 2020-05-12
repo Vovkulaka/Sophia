@@ -1,5 +1,4 @@
-﻿using System;
-using Configuration;
+﻿using Configuration;
 using DataProvider.Infrastructure.Extantions;
 using MassTransit;
 using MessageModelLib;
@@ -7,7 +6,6 @@ using NLog;
 using NotaryProvider.Services;
 using System.IO;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace NotaryProvider
 {
@@ -15,12 +13,9 @@ namespace NotaryProvider
     {
         Logger Logger { get; } = LogManager.GetCurrentClassLogger();
         static Logger LoggerStatic { get; } = LogManager.GetCurrentClassLogger();
-
         static string currentDirectory = AppSettings.VolumePath;
-        //readonly IServiceProvider _fileComposeService;
-        readonly IFileComposeService _fileComposeService;
+        IFileComposeService _fileComposeService;
 
-        //public FilePartConsumer(IServiceProvider serviceProvider)
         public FilePartConsumer(IFileComposeService fileComposeService)
         {
             _fileComposeService = fileComposeService;
@@ -42,11 +37,10 @@ namespace NotaryProvider
                 context.Message.LengthPart,
                 context.Message.LengthLastPart);
 
-            Logger.AddLogStart($"RECEIVING Id_part: {context.Message.IdPart} of {context.Message.Quantity} parts from model: {context.Message.IdFile}");
+            LoggerStatic.AddLogStart($"RECEIVING Id_part: {context.Message.IdPart} of {context.Message.Quantity} parts from model: {context.Message.IdFile}");
 
-            //await _fileComposeService.GetService<IFileComposeService>().AddOrUpdate(partyDocument); // ПОМИЛКА: Object reference not set to an instance of an object.
-            await _fileComposeService.AddOrUpdate(partyDocument); // ПОМИЛКА: Object reference not set to an instance of an object.
-            //await new FileComposeService().AddOrUpdate(partyDocument); // так робити не правильно!!!
+            //_fileComposeService.AddOrUpdate(partyDocument);
+            await new FileComposeService().AddOrUpdate(partyDocument);
         }
 
 

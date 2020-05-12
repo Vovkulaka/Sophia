@@ -27,7 +27,7 @@ namespace NotaryProvider
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services) // заміни viod на ConfigureServices - https://habr.com/ru/post/437002/
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
             services.AddSwaggerDocument(config =>
@@ -54,22 +54,21 @@ namespace NotaryProvider
             //services.AddHostedService<FileBuilderHostedServiceDI<MassTransitConsumerHostedService>>();
             services.AddHostedService<FileBuilderHostedService>();
 
+            //services.AddTransient<GetDataService>();
+            //services.AddSingleton<GetDataService>(new ReturnResponseService());
             services.AddTransient<SavingToDBService>();
-
-            services.AddTransient<ReturnResponseService>();
             services.AddTransient<IReturnResponseService, ReturnResponseService>(factory => factory.GetService<ReturnResponseService>());
-
-            services.AddSingleton<FileComposeService>(); 
+            services.AddTransient<ReturnResponseService>();
             services.AddSingleton<IFileComposeService>(new FileComposeService());
-
-            services.AddTransient<GetDataService>();
+            services.AddSingleton<FileComposeService>();
+            //services.AddSingleton(new GetDataService(new ReturnResponseService()));
             services.AddSingleton<IGetDataService>(new GetDataService());
-            //services.AddTransient<IGetDataService, GetDataService>((dsvc) =>
-            //{
-                //IReturnResponseService svc = dsvc.GetService<IReturnResponseService>();
-                //return new GetDataService(svc);
-            //});
-            // протсо для Git
+            services.AddSingleton<GetDataService>();
+            services.AddTransient<GetDataService>((dsvc) =>
+            {
+                IReturnResponseService svc = dsvc.GetService<IReturnResponseService>();
+                return new GetDataService(svc);
+            });
         }
 
         private void SetNlogConfig()
@@ -95,10 +94,11 @@ namespace NotaryProvider
                 config.ReceiveEndpoint("SophiaUploader", cfg =>
                 {
                     //cfg.ConfigureConsumer<FilePartConsumer>(serviceProvider);
-                    cfg.Consumer<FilePartConsumer>(serviceProvider);
+                    cfg.Consumer<FilePartConsumer>();
                 });
                 config.ReceiveEndpoint("SophiaFrontApi", cfg =>
                 {
+                    //cfg.ConfigureConsumer<RequestConsumer>(serviceProvider);
                     cfg.Consumer<RequestConsumer>();
                 });
                 // Для відпарвки ReceiveEndpoint непотрібний!!!

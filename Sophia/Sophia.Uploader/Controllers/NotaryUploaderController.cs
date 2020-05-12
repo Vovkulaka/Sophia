@@ -65,6 +65,8 @@ namespace Sophia.Uploader.Controllers
                 SendFileMessage(vostok);
                 //SendFileMessage(fileSource, item);
                 responce = "Ok";
+
+                Logger.AddLogStart("UpdateOpenDataSources responce = Ok");
             }
             catch (Exception ex)
             {

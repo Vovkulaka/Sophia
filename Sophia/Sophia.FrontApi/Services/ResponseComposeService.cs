@@ -20,6 +20,7 @@ namespace Sophia.FrontApi.Services
         /// <summary>
         /// https://habr.com/ru/company/skbkontur/blog/348508/
         /// </summary>
+        // Коли додасиш ще один продюсер, то для розділення 
         private static ConcurrentDictionary<string, ConcurrentBag<MessageResponseModel>> colectoin { get; } = 
             new ConcurrentDictionary<string, ConcurrentBag<MessageResponseModel>>();
 

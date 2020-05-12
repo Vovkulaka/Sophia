@@ -13,11 +13,11 @@ namespace Sophia.FrontApi
     public class ResponseConsumer : IConsumer<MessageResponseModel>
     {
         static Logger LoggerStatic { get; } = LogManager.GetCurrentClassLogger();
-        readonly IResponseComposeService _responseComposeService;
+        IResponseComposeService responseComposeService;
 
-        public ResponseConsumer (IResponseComposeService responseComposeService)
+        public ResponseConsumer (IResponseComposeService _responseComposeService)
         {
-            _responseComposeService = responseComposeService;
+            responseComposeService = _responseComposeService;
         }
         public ResponseConsumer () { }
 
@@ -32,7 +32,7 @@ namespace Sophia.FrontApi
                     context.Message.IdRequest,
                     context.Message.Data);
 
-                await _responseComposeService.AddOrUpdate(partyDocument);
+                await responseComposeService.AddOrUpdate(partyDocument);
             }
         }
     }

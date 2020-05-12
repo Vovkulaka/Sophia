@@ -24,10 +24,14 @@ namespace NotaryProvider.Services
     {
         Logger Logger { get; } = LogManager.GetCurrentClassLogger();
         IReturnResponseService _returnResponseService;
+        //IServiceProvider _serviceProvide;
+        //readonly IConfiguration _configuration;
 
         public GetDataService(IReturnResponseService returnResponseService)
         {
             _returnResponseService = returnResponseService;
+            //IServiceProvider _serviceProvide;
+            //readonly IConfiguration _configuration;
         }
 
         public GetDataService() {}
